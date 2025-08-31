@@ -1,0 +1,30 @@
+{
+  "project_info": {
+    "project_number": "874421575726",
+    "firebase_url": "https://necklace-f5d68-default-rtdb.firebaseio.com",
+    "project_id": "necklace-f5d68",
+    "storage_bucket": "necklace-f5d68.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:874421575726:android:ecbad7a33ed3fb24457fbf",
+        "android_client_info": {
+          "package_name": "com.example.safetynecklaceapp"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyB8B1p5oiOXCxBn9JX9gvYDtmnXiyeCJDs"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

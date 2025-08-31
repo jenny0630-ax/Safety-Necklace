@@ -11,27 +11,44 @@ class _LoginScreenState extends State<LoginScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Color(0xFFF9DDAA),
       body: Column(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-          Text("App Name"),
-          TextField(
-            decoration: InputDecoration(
-              labelText: 'Email',
-              border: OutlineInputBorder(),
-            ),
+          Container(),
+          Column(
+            children: [
+              Text(
+                "App Name",
+                style: TextStyle(fontSize: 32, fontWeight: FontWeight.bold),
+              ),
+              TextField(
+                decoration: InputDecoration(
+                  labelText: 'Email',
+                  border: OutlineInputBorder(),
+                ),
+              ),
+              TextField(
+                decoration: InputDecoration(
+                  labelText: 'Password',
+                  border: OutlineInputBorder(),
+                ),
+                obscureText: true,
+              ),
+              TextButton(child: Text("Forgot Password?"), onPressed: () {}),
+              ElevatedButton(
+                onPressed: () {
+                  // Handle login logic here
+                },
+                child: Text('Login'),
+              ),
+            ],
           ),
-          TextField(
-            decoration: InputDecoration(
-              labelText: 'Password',
-              border: OutlineInputBorder(),
-            ),
-            obscureText: true,
-          ),
-          ElevatedButton(
+          TextButton(
             onPressed: () {
-              // Handle login logic here
+              // Navigate to registration screen
             },
-            child: Text('Login'),
+            child: Text('New Account? Sign Up.'),
           ),
         ],
       ),
