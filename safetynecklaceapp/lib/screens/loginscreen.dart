@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:safetynecklaceapp/services/auth.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
@@ -24,7 +25,10 @@ class _LoginScreenState extends State<LoginScreen> {
             children: [
               Text(
                 "App Name",
-                style: TextStyle(fontSize: 32, fontWeight: FontWeight.bold),
+                style: GoogleFonts.judson(
+                  fontSize: 45,
+                  fontWeight: FontWeight.bold,
+                ),
               ),
               Padding(
                 padding: const EdgeInsets.all(22.0),

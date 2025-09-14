@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
+import 'package:safetynecklaceapp/services/auth.dart';
 
 class SignUpScreen extends StatefulWidget {
   const SignUpScreen({super.key});
@@ -8,6 +10,10 @@ class SignUpScreen extends StatefulWidget {
 }
 
 class _SignUpScreenState extends State<SignUpScreen> {
+  TextEditingController emailController = TextEditingController();
+  TextEditingController passwordController = TextEditingController();
+  TextEditingController confirmPasswordController = TextEditingController();
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -18,7 +24,10 @@ class _SignUpScreenState extends State<SignUpScreen> {
         children: [
           Text(
             "App Name",
-            style: TextStyle(fontSize: 32, fontWeight: FontWeight.bold),
+            style: GoogleFonts.judson(
+              fontSize: 45,
+              fontWeight: FontWeight.bold,
+            ),
           ),
           Padding(
             padding: const EdgeInsets.all(22.0),
@@ -36,6 +45,8 @@ class _SignUpScreenState extends State<SignUpScreen> {
                 ),
               ),
               child: TextField(
+                controller: emailController,
+                keyboardType: TextInputType.emailAddress,
                 decoration: InputDecoration(
                   labelText: 'Email',
                   labelStyle: TextStyle(color: Color(0xFFC8B283)),
@@ -65,6 +76,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                 ),
               ),
               child: TextField(
+                controller: passwordController,
                 obscureText: true,
                 decoration: InputDecoration(
                   labelText: 'Password',
@@ -95,6 +107,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                 ),
               ),
               child: TextField(
+                controller: confirmPasswordController,
                 obscureText: true,
                 decoration: InputDecoration(
                   labelText: 'Confirm Password',
@@ -121,6 +134,21 @@ class _SignUpScreenState extends State<SignUpScreen> {
               ),
               onPressed: () {
                 // Handle login logic here
+                String email = emailController.text.trim();
+                String password = passwordController.text.trim();
+                Auth().signup(email, password).then((user) {
+                  if (user != null) {
+                    Navigator.pushNamedAndRemoveUntil(
+                      context,
+                      '/',
+                      (_) => false,
+                    );
+                  } else {
+                    ScaffoldMessenger.of(
+                      context,
+                    ).showSnackBar(SnackBar(content: Text('Sign Up Failed')));
+                  }
+                });
               },
               child: Text('Sign Up'),
             ),
