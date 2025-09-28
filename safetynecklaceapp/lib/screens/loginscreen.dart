@@ -105,7 +105,22 @@ class _LoginScreenState extends State<LoginScreen> {
                   // Handle login logic here
                   String email = emailController.text.trim();
                   String password = passwordController.text.trim();
-                  Auth().login(email, password);
+                  Auth().login(email, password).then((user) {
+                    if (user != null) {
+                      Navigator.pushNamedAndRemoveUntil(
+                        context,
+                        '/',
+                        (_) => false,
+                      );
+                    } else {
+                      // Show error message
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        SnackBar(
+                          content: Text('Login failed. Please try again.'),
+                        ),
+                      );
+                    }
+                  });
                 },
                 child: Text('Login'),
               ),
