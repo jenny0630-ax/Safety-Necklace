@@ -85,11 +85,48 @@ class _HomeScreenState extends State<HomeScreen> {
                           shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(16),
                           ),
-                          child: Center(
-                            child: Text(
-                              'Test',
-                              style: theme.textTheme.headlineSmall,
+                          child: Padding(
+                            padding: const EdgeInsets.all(8.0),
+                            child: Center(
+                              child: Text(
+                                'John is at 123 Main St, Springfield, CA',
+                                maxLines: 5,
+                                style: TextStyle(fontSize: 16),
+                              ),
                             ),
+                          ),
+                        ),
+                      ),
+                      SizedBox(
+                        height: SizeConfig.vertical! * 8,
+                        width: SizeConfig.horizontal! * 80,
+                        child: Card(
+                          color: cardGold,
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(16),
+                          ),
+                          child: Row(
+                            children: [
+                              Padding(
+                                padding: const EdgeInsets.fromLTRB(
+                                  8.0,
+                                  0,
+                                  0,
+                                  0,
+                                ),
+                                child: Icon(
+                                  Icons.warning_rounded,
+                                  size: SizeConfig.horizontal! * 10,
+                                  color: const Color.fromARGB(255, 228, 28, 28),
+                                ),
+                              ),
+                              Center(
+                                child: Text(
+                                  'The necklace has detected a fall!',
+                                  style: TextStyle(fontSize: 16),
+                                ),
+                              ),
+                            ],
                           ),
                         ),
                       ),
@@ -105,7 +142,12 @@ class _HomeScreenState extends State<HomeScreen> {
         child: ListView(
           children: [
             ListTile(title: Text('About Device'), onTap: () {}),
-            ListTile(title: Text('Settings'), onTap: () {}),
+            ListTile(
+              title: Text('Settings'),
+              onTap: () {
+                Navigator.pushNamed(context, '/settings');
+              },
+            ),
             ListTile(
               title: Text('Logout'),
               onTap: () {
