@@ -3,6 +3,7 @@ import 'package:safetynecklaceapp/screens/loginscreen.dart';
 import 'package:safetynecklaceapp/screens/signupscreen.dart';
 import 'package:safetynecklaceapp/screens/homescreen.dart';
 import 'package:safetynecklaceapp/screens/Settingscreen.dart';
+import 'package:safetynecklaceapp/screens/profilescreen.dart';
 
 var routes = {
   '/': (context) => InitialScreen(),
@@ -10,4 +11,5 @@ var routes = {
   '/signup': (context) => SignUpScreen(),
   '/home': (context) => HomeScreen(),
   '/settings': (context) => Settingscreen(),
+  '/profile': (context) => Profilescreen(),
 };

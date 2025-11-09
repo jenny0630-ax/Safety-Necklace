@@ -22,22 +22,43 @@ class _SettingscreenState extends State<Settingscreen> {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            SizedBox(
-              width: SizeConfig.horizontal! * 85,
-              height: SizeConfig.vertical! * 25,
-              child: Card(
-                child: Row(
-                  children: [
-                    CircleAvatar(),
-                    Column(
-                      children: [
-                        Text("asdf"),
-                        Text("asdf"),
-                        Text("asdf"),
-                        Text("asdf"),
-                      ],
-                    ),
-                  ],
+            InkWell(
+              onTap: () {
+                Navigator.pushNamed(context, '/profile');
+              },
+              child: SizedBox(
+                width: SizeConfig.horizontal! * 85,
+                height: SizeConfig.vertical! * 25,
+                child: Card(
+                  color: cardGold,
+                  elevation: 5,
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                    children: [
+                      CircleAvatar(radius: 65),
+                      SizedBox(
+                        width: SizeConfig.horizontal! * 38,
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                          children: [
+                            Text("Jane Doe", style: TextStyle(fontSize: 18)),
+                            Text(
+                              "September 31, 1999",
+                              textAlign: TextAlign.center,
+                              overflow: TextOverflow.visible,
+                              maxLines: 2,
+                              style: TextStyle(fontSize: 18),
+                            ),
+                            Text("Age: 32", style: TextStyle(fontSize: 18)),
+                            Text(
+                              "123-456-7890",
+                              style: TextStyle(fontSize: 18),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ],
+                  ),
                 ),
               ),
             ),
@@ -47,12 +68,19 @@ class _SettingscreenState extends State<Settingscreen> {
               child: ElevatedButton(
                 style: ElevatedButton.styleFrom(
                   backgroundColor: cardGold,
+                  elevation: 5,
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(10),
                   ),
                 ),
                 onPressed: () {},
-                child: Text("Notifications", style: TextStyle(fontSize: 25)),
+                child: Text(
+                  "Notifications",
+                  style: TextStyle(
+                    fontSize: 25,
+                    color: const Color(0xFF3A3A3A),
+                  ),
+                ),
               ),
             ),
             SizedBox(
@@ -61,12 +89,16 @@ class _SettingscreenState extends State<Settingscreen> {
               child: ElevatedButton(
                 style: ElevatedButton.styleFrom(
                   backgroundColor: cardGold,
+                  elevation: 5,
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(10),
                   ),
                 ),
                 onPressed: () {},
-                child: Text("Language", style: TextStyle(fontSize: 25)),
+                child: Text(
+                  "Language",
+                  style: TextStyle(fontSize: 25, color: Color(0xFF3A3A3A)),
+                ),
               ),
             ),
             SizedBox(
@@ -75,12 +107,16 @@ class _SettingscreenState extends State<Settingscreen> {
               child: ElevatedButton(
                 style: ElevatedButton.styleFrom(
                   backgroundColor: cardGold,
+                  elevation: 5,
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(10),
                   ),
                 ),
                 onPressed: () {},
-                child: Text("Logout", style: TextStyle(fontSize: 25)),
+                child: Text(
+                  "Logout",
+                  style: TextStyle(fontSize: 25, color: Color(0xFF3A3A3A)),
+                ),
               ),
             ),
             TextButton(
