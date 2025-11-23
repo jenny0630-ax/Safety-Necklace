@@ -23,4 +23,22 @@ class Data {
     );
     ref.set(byteString);
   }
+
+  static void saveProfileData({
+    required String name,
+    required String dob,
+    required String mobile,
+    // required String email,
+  }) {
+    String uid = Auth().currentUser!.uid;
+    DatabaseReference ref = FirebaseDatabase.instance.ref(
+      'users/$uid/profileData',
+    );
+    ref.set({
+      'name': name,
+      'dob': dob,
+      'mobile': mobile,
+      // 'email': email
+    });
+  }
 }

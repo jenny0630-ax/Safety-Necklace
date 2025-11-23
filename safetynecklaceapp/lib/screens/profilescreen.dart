@@ -15,6 +15,17 @@ class Profilescreen extends StatefulWidget {
 class _ProfilescreenState extends State<Profilescreen> {
   XFile? _profileImage;
 
+  TextEditingController nameController = TextEditingController();
+  TextEditingController dobController = TextEditingController();
+  TextEditingController mobileController = TextEditingController();
+  // TextEditingController emailController = TextEditingController();
+
+  bool canSaveProfileData() {
+    return nameController.text.isNotEmpty &&
+        dobController.text.isNotEmpty &&
+        mobileController.text.isNotEmpty;
+  }
+
   @override
   Widget build(BuildContext context) {
     const cream = Color(0xFFFFEFD2);
@@ -51,10 +62,35 @@ class _ProfilescreenState extends State<Profilescreen> {
                         : null,
                   ),
                 ),
-                Styledtextfield(labelText: "Name"),
-                Styledtextfield(labelText: "Date of Birth"),
-                Styledtextfield(labelText: "Mobile Number"),
-                Styledtextfield(labelText: "Email"),
+                Styledtextfield(controller: nameController, labelText: "Name"),
+                Styledtextfield(
+                  controller: dobController,
+                  labelText: "Date of Birth",
+                ),
+                Styledtextfield(
+                  controller: mobileController,
+                  labelText: "Mobile Number",
+                ),
+
+                // Styledtextfield(
+                //   controller: emailController,
+                //   labelText: "Email",
+                // ),
+                Center(
+                  child: ElevatedButton(
+                    onPressed: canSaveProfileData()
+                        ? () {
+                            Data.saveProfileData(
+                              name: nameController.text,
+                              dob: dobController.text,
+                              mobile: mobileController.text,
+                              // email: emailController.text,
+                            );
+                          }
+                        : null,
+                    child: Text("Save"),
+                  ),
+                ),
               ],
             ),
           ),
