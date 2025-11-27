@@ -112,6 +112,26 @@ class _SettingscreenState extends State<Settingscreen> {
                     borderRadius: BorderRadius.circular(10),
                   ),
                 ),
+                onPressed: () {
+                  Navigator.pushNamed(context, '/account');
+                },
+                child: Text(
+                  "Account Information",
+                  style: TextStyle(fontSize: 25, color: Color(0xFF3A3A3A)),
+                ),
+              ),
+            ),
+            SizedBox(
+              width: SizeConfig.horizontal! * 85,
+              height: SizeConfig.vertical! * 7,
+              child: ElevatedButton(
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: cardGold,
+                  elevation: 5,
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(10),
+                  ),
+                ),
                 onPressed: () {},
                 child: Text(
                   "Logout",

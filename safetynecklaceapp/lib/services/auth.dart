@@ -31,4 +31,44 @@ class Auth {
   Future<void> logout() async {
     await _auth.signOut();
   }
+
+  Future<void> sendPasswordResetEmail(String email) async {
+    try {
+      await _auth.sendPasswordResetEmail(email: email);
+    } catch (e) {
+      print('Password reset error: $e');
+    }
+  }
+
+  Future<void> changeEmail(String newEmail) async {
+    // try { // TODO: API outdated, update again later
+    //   await currentUser?.updateEmail(newEmail);
+    // } catch (e) {
+    //   print('Change email error: $e');
+    // }
+  }
+
+  Future<bool> reauthenticate(String password) async {
+    try {
+      AuthCredential credential = EmailAuthProvider.credential(
+        email: currentUser!.email!,
+        password: password,
+      );
+      await currentUser?.reauthenticateWithCredential(credential);
+      return true;
+    } catch (e) {
+      print('Reauthentication error: $e');
+      return false;
+    }
+  }
+
+  Future<String?> changePassword(String newPassword) async {
+    try {
+      await currentUser?.updatePassword(newPassword);
+      return null;
+    } catch (e) {
+      print('Change password error: $e');
+      return e.toString();
+    }
+  }
 }

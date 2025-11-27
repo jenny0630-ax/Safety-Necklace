@@ -32,11 +32,12 @@ class _ProfilescreenState extends State<Profilescreen> {
     const softcream = Color(0xFFF9DDAA);
     const cardGold = Color(0xFFF4BF5E);
     return Scaffold(
+      appBar: AppBar(backgroundColor: cream),
       backgroundColor: cream,
       body: SafeArea(
         child: Center(
           child: Padding(
-            padding: const EdgeInsets.all(30.0),
+            padding: const EdgeInsets.fromLTRB(30.0, 0.0, 30.0, 30.0),
             child: Column(
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               crossAxisAlignment: CrossAxisAlignment.start,
