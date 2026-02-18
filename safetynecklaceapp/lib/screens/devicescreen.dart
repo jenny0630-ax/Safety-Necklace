@@ -2,7 +2,6 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:safetynecklaceapp/services/data.dart';
 import 'package:safetynecklaceapp/size_config.dart';
-import 'package:timeago/timeago.dart' as timeago;
 
 /// Device detail screen – shows battery, sensor functions, and status
 /// for a single paired necklace.
@@ -50,7 +49,6 @@ class _DeviceScreenState extends State<DeviceScreen> {
   Widget build(BuildContext context) {
     const cream = Color(0xFFFFEFD2);
     const softcream = Color(0xFFF9DDAA);
-    const cardGold = Color(0xFFF4BF5E);
 
     final device = _device;
 
@@ -125,41 +123,46 @@ class _DeviceScreenState extends State<DeviceScreen> {
                     softcream,
                     child: Column(
                       children: [
-                        _statusRow(
-                          'Status',
-                          device.online ? 'Online' : 'Offline',
-                          trailing: CircleAvatar(
-                            radius: 8,
-                            backgroundColor: device.online
-                                ? Colors.green
-                                : Colors.grey,
-                          ),
+                        _activityRow(
+                          dotColor: const Color(0xFF7EE081),
+                          title: device.name,
+                          subtitle:
+                              'Open from: ${_timeFromTimestamp(device.lastTimestamp)}',
                         ),
-                        const Divider(),
-                        _statusRow(
-                          'GPS Fix',
-                          device.gpsFix ? 'Active' : 'No Fix',
+                        const SizedBox(height: 8),
+                        _activityRow(
+                          dotColor: const Color(0xFFFF7F7F),
+                          title: device.name,
+                          subtitle:
+                              'Close from: ${_timeFromTimestamp(device.lastTimestamp)}',
                           trailing: Icon(
                             device.gpsFix
                                 ? Icons.gps_fixed
                                 : Icons.gps_not_fixed,
-                            color: device.gpsFix ? Colors.green : Colors.red,
+                            color: const Color(0xFF9AA0A7),
+                            size: 20,
                           ),
                         ),
-                        const Divider(),
-                        _statusRow(
-                          'Last Update',
-                          device.lastTimestamp > 0
-                              ? timeago.format(
-                                  DateTime.fromMillisecondsSinceEpoch(
-                                    device.lastTimestamp * 1000,
-                                  ),
-                                )
-                              : 'Never',
-                          trailing: const Icon(
-                            Icons.access_time,
-                            color: Colors.black54,
-                          ),
+                        const SizedBox(height: 22),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.end,
+                          children: const [
+                            Icon(
+                              Icons.circle,
+                              size: 11,
+                              color: Color(0xFF7EE081),
+                            ),
+                            SizedBox(width: 6),
+                            Text('Online', style: TextStyle(fontSize: 12)),
+                            SizedBox(width: 16),
+                            Icon(
+                              Icons.close,
+                              size: 14,
+                              color: Color(0xFFFF7F7F),
+                            ),
+                            SizedBox(width: 6),
+                            Text('Offline', style: TextStyle(fontSize: 12)),
+                          ],
                         ),
                       ],
                     ),
@@ -251,20 +254,48 @@ class _DeviceScreenState extends State<DeviceScreen> {
     );
   }
 
-  Widget _statusRow(String label, String value, {Widget? trailing}) {
+  Widget _activityRow({
+    required Color dotColor,
+    required String title,
+    required String subtitle,
+    Widget? trailing,
+  }) {
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 6),
       child: Row(
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Expanded(child: Text(label, style: const TextStyle(fontSize: 16))),
-          Text(
-            value,
-            style: const TextStyle(fontSize: 16, fontWeight: FontWeight.w500),
+          Icon(Icons.circle, size: 12, color: dotColor),
+          const SizedBox(width: 8),
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  title,
+                  style: const TextStyle(
+                    fontSize: 30 / 1.6,
+                    fontWeight: FontWeight.w500,
+                  ),
+                ),
+                const SizedBox(height: 3),
+                Text(subtitle, style: const TextStyle(fontSize: 22 / 1.6)),
+              ],
+            ),
           ),
           if (trailing != null) ...[const SizedBox(width: 8), trailing],
         ],
       ),
     );
+  }
+
+  String _timeFromTimestamp(int ts) {
+    if (ts <= 0) return '--:--';
+    final dt = DateTime.fromMillisecondsSinceEpoch(ts * 1000);
+    final hour = dt.hour > 12 ? dt.hour - 12 : (dt.hour == 0 ? 12 : dt.hour);
+    final minute = dt.minute.toString().padLeft(2, '0');
+    final period = dt.hour >= 12 ? 'PM' : 'AM';
+    return '$hour:$minute$period';
   }
 
   Widget _functionTile(

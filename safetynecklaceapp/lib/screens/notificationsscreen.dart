@@ -41,56 +41,55 @@ class _NotificationSettingsScreenState
   @override
   Widget build(BuildContext context) {
     const cream = Color(0xFFFFEFD2);
-    const softcream = Color(0xFFF9DDAA);
 
     return Scaffold(
       backgroundColor: cream,
       appBar: AppBar(
         backgroundColor: cream,
         title: const Text('Notifications'),
-        centerTitle: true,
       ),
       body: _loading
           ? const Center(child: CircularProgressIndicator())
           : Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 16),
-              child: Card(
-                color: softcream,
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(16),
-                ),
-                child: Column(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    SwitchListTile(
-                      title: const Text(
-                        'Sound',
-                        style: TextStyle(fontSize: 20),
-                      ),
-                      value: _sound,
-                      activeColor: const Color(0xFFF4BF5E),
-                      onChanged: (v) {
-                        setState(() => _sound = v);
-                        _save();
-                      },
-                    ),
-                    const Divider(height: 1),
-                    SwitchListTile(
-                      title: const Text(
-                        'Vibration',
-                        style: TextStyle(fontSize: 20),
-                      ),
-                      value: _vibration,
-                      activeColor: const Color(0xFFF4BF5E),
-                      onChanged: (v) {
-                        setState(() => _vibration = v);
-                        _save();
-                      },
-                    ),
-                  ],
-                ),
+              padding: const EdgeInsets.symmetric(horizontal: 30, vertical: 24),
+              child: Column(
+                children: [
+                  _toggleRow('Sound', _sound, (v) {
+                    setState(() => _sound = v);
+                    _save();
+                  }),
+                  const SizedBox(height: 16),
+                  _toggleRow('Vibration', _vibration, (v) {
+                    setState(() => _vibration = v);
+                    _save();
+                  }),
+                ],
               ),
             ),
+    );
+  }
+
+  Widget _toggleRow(String title, bool value, ValueChanged<bool> onChanged) {
+    return Row(
+      children: [
+        Expanded(
+          child: Text(
+            title,
+            style: const TextStyle(
+              fontSize: 34 / 1.6,
+              color: Color(0xFF3D3D3D),
+            ),
+          ),
+        ),
+        Switch(
+          value: value,
+          activeColor: const Color(0xFF96D98E),
+          activeTrackColor: const Color(0xFFA7E3A3),
+          inactiveThumbColor: Colors.white,
+          inactiveTrackColor: const Color(0xFFA9ACB2),
+          onChanged: onChanged,
+        ),
+      ],
     );
   }
 }

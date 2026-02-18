@@ -15,6 +15,11 @@ class MapScreen extends StatefulWidget {
 }
 
 class _MapScreenState extends State<MapScreen> {
+  static const Color _cream = Color(0xFFFFEFD2);
+  static const Color _cardGold = Color(0xFFF4BF5E);
+  static const String _tileTemplate =
+      'https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png';
+
   final MapController _mapController = MapController();
   StreamSubscription? _sub;
   NecklaceDevice? _device;
@@ -41,49 +46,58 @@ class _MapScreenState extends State<MapScreen> {
 
   @override
   Widget build(BuildContext context) {
-    const cream = Color(0xFFFFEFD2);
     final LatLng center = _device != null && _device!.lat != 0.0
         ? LatLng(_device!.lat, _device!.lon)
         : const LatLng(33.6846, -117.7957); // default fallback
 
     return Scaffold(
-      backgroundColor: cream,
+      backgroundColor: _cream,
       appBar: AppBar(
-        backgroundColor: cream,
+        backgroundColor: _cream,
         title: Text(_device?.name ?? 'Map'),
         centerTitle: true,
       ),
       body: Stack(
         children: [
-          FlutterMap(
-            mapController: _mapController,
-            options: MapOptions(initialCenter: center, initialZoom: 15.0),
-            children: [
-              TileLayer(
-                urlTemplate:
-                    "https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",
-              ),
-              if (_device != null && _device!.lat != 0.0)
-                MarkerLayer(
-                  markers: [
-                    Marker(
-                      width: 50,
-                      height: 50,
-                      point: LatLng(_device!.lat, _device!.lon),
-                      child: Column(
-                        mainAxisSize: MainAxisSize.min,
-                        children: [
-                          Icon(
+          ClipRRect(
+            borderRadius: BorderRadius.circular(24),
+            child: Padding(
+              padding: const EdgeInsets.all(12.0),
+              child: FlutterMap(
+                mapController: _mapController,
+                options: MapOptions(initialCenter: center, initialZoom: 15.0),
+                children: [
+                  TileLayer(
+                    urlTemplate: _tileTemplate,
+                    subdomains: const ['a', 'b', 'c', 'd'],
+                    userAgentPackageName:
+                        'com.safetynecklace.safetynecklaceapp',
+                    maxZoom: 20,
+                  ),
+                  RichAttributionWidget(
+                    attributions: const [
+                      TextSourceAttribution('© OpenStreetMap contributors'),
+                      TextSourceAttribution('© CARTO'),
+                    ],
+                  ),
+                  if (_device != null && _device!.lat != 0.0)
+                    MarkerLayer(
+                      markers: [
+                        Marker(
+                          width: 50,
+                          height: 50,
+                          point: LatLng(_device!.lat, _device!.lon),
+                          child: Icon(
                             Icons.location_on,
                             color: _device!.online ? Colors.red : Colors.grey,
                             size: 36,
                           ),
-                        ],
-                      ),
+                        ),
+                      ],
                     ),
-                  ],
-                ),
-            ],
+                ],
+              ),
+            ),
           ),
 
           // ── Info chip at bottom ───────────────────────────────────
@@ -134,7 +148,7 @@ class _MapScreenState extends State<MapScreen> {
       ),
       // ── Re-center FAB ──────────────────────────────────────────
       floatingActionButton: FloatingActionButton.small(
-        backgroundColor: const Color(0xFFF4BF5E),
+        backgroundColor: _cardGold,
         onPressed: () {
           if (_device != null && _device!.lat != 0.0) {
             _mapController.move(LatLng(_device!.lat, _device!.lon), 15.0);

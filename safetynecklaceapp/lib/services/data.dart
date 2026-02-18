@@ -109,12 +109,13 @@ class Data {
     required String name,
     required String dob,
     required String mobile,
+    String? email,
   }) {
     String uid = Auth().currentUser!.uid;
     DatabaseReference ref = FirebaseDatabase.instance.ref(
       'users/$uid/profileData',
     );
-    ref.set({'name': name, 'dob': dob, 'mobile': mobile});
+    ref.set({'name': name, 'dob': dob, 'mobile': mobile, 'email': email});
   }
 
   /// Fetch the current user's profile once.

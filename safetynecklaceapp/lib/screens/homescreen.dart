@@ -18,6 +18,8 @@ class HomeScreen extends StatefulWidget {
 
 class _HomeScreenState extends State<HomeScreen> {
   static const LatLng _defaultCenter = LatLng(33.6846, -117.7957);
+  static const String _tileTemplate =
+      'https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png';
 
   List<NecklaceDevice> _devices = [];
   List<DeviceAlert> _alerts = [];
@@ -80,8 +82,9 @@ class _HomeScreenState extends State<HomeScreen> {
               },
               child: SizedBox(
                 width: SizeConfig.horizontal! * 90,
-                height: SizeConfig.horizontal! * 90,
+                height: SizeConfig.horizontal! * 48,
                 child: Card(
+                  elevation: 4,
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(32),
                   ),
@@ -95,8 +98,19 @@ class _HomeScreenState extends State<HomeScreen> {
                         ),
                         children: [
                           TileLayer(
-                            urlTemplate:
-                                "https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",
+                            urlTemplate: _tileTemplate,
+                            subdomains: const ['a', 'b', 'c', 'd'],
+                            userAgentPackageName:
+                                'com.safetynecklace.safetynecklaceapp',
+                            maxZoom: 20,
+                          ),
+                          RichAttributionWidget(
+                            attributions: const [
+                              TextSourceAttribution(
+                                '© OpenStreetMap contributors',
+                              ),
+                              TextSourceAttribution('© CARTO'),
+                            ],
                           ),
                           MarkerLayer(
                             markers: _devices
@@ -131,6 +145,7 @@ class _HomeScreenState extends State<HomeScreen> {
                 width: SizeConfig.horizontal! * 90,
                 child: Card(
                   color: softcream,
+                  elevation: 3,
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(32),
                   ),
@@ -252,7 +267,13 @@ class _HomeScreenState extends State<HomeScreen> {
                   ),
                   const SizedBox(width: 10),
                   Expanded(
-                    child: Text(d.name, style: const TextStyle(fontSize: 16)),
+                    child: Text(
+                      d.name,
+                      style: const TextStyle(
+                        fontSize: 16,
+                        fontWeight: FontWeight.w500,
+                      ),
+                    ),
                   ),
                   Text(
                     '${d.battery.toStringAsFixed(0)}%',
