@@ -23,7 +23,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
           Text(
-            "App Name",
+            "SafeNeck",
             style: GoogleFonts.judson(
               fontSize: 45,
               fontWeight: FontWeight.bold,

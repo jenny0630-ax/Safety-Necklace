@@ -24,7 +24,7 @@ class _LoginScreenState extends State<LoginScreen> {
           Column(
             children: [
               Text(
-                "App Name",
+                "SafeNeck",
                 style: GoogleFonts.judson(
                   fontSize: 45,
                   fontWeight: FontWeight.bold,

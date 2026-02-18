@@ -1,5 +1,7 @@
+import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:safetynecklaceapp/services/auth.dart';
+import 'package:safetynecklaceapp/services/data.dart';
 import 'package:safetynecklaceapp/size_config.dart';
 
 class Settingscreen extends StatefulWidget {
@@ -10,21 +12,43 @@ class Settingscreen extends StatefulWidget {
 }
 
 class _SettingscreenState extends State<Settingscreen> {
+  String _name = 'User';
+  String _dob = '';
+  String _mobile = '';
+
+  @override
+  void initState() {
+    super.initState();
+    _loadProfile();
+  }
+
+  Future<void> _loadProfile() async {
+    final data = await Data.getProfileData();
+    if (data != null && mounted) {
+      setState(() {
+        _name = data['name'] ?? 'User';
+        _dob = data['dob'] ?? '';
+        _mobile = data['mobile'] ?? '';
+      });
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     const cream = Color(0xFFFFEFD2);
-    const softcream = Color(0xFFF9DDAA);
     const cardGold = Color(0xFFF4BF5E);
     return Scaffold(
       backgroundColor: cream,
-      appBar: AppBar(backgroundColor: cream),
+      appBar: AppBar(backgroundColor: cream, title: const Text('Settings')),
       body: Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
+            // ── Profile card ──────────────────────────────────────
             InkWell(
-              onTap: () {
-                Navigator.pushNamed(context, '/profile');
+              onTap: () async {
+                await Navigator.pushNamed(context, '/profile');
+                _loadProfile(); // refresh after edit
               },
               child: SizedBox(
                 width: SizeConfig.horizontal! * 85,
@@ -35,25 +59,21 @@ class _SettingscreenState extends State<Settingscreen> {
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                     children: [
-                      CircleAvatar(radius: 65),
+                      const CircleAvatar(radius: 65),
                       SizedBox(
                         width: SizeConfig.horizontal! * 38,
                         child: Column(
                           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                           children: [
-                            Text("Jane Doe", style: TextStyle(fontSize: 18)),
+                            Text(_name, style: const TextStyle(fontSize: 18)),
                             Text(
-                              "September 31, 1999",
+                              _dob,
                               textAlign: TextAlign.center,
                               overflow: TextOverflow.visible,
                               maxLines: 2,
-                              style: TextStyle(fontSize: 18),
+                              style: const TextStyle(fontSize: 18),
                             ),
-                            Text("Age: 32", style: TextStyle(fontSize: 18)),
-                            Text(
-                              "123-456-7890",
-                              style: TextStyle(fontSize: 18),
-                            ),
+                            Text(_mobile, style: const TextStyle(fontSize: 18)),
                           ],
                         ),
                       ),
@@ -62,112 +82,66 @@ class _SettingscreenState extends State<Settingscreen> {
                 ),
               ),
             ),
-            SizedBox(
-              width: SizeConfig.horizontal! * 85,
-              height: SizeConfig.vertical! * 7,
-              child: ElevatedButton(
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: cardGold,
-                  elevation: 5,
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(10),
-                  ),
-                ),
-                onPressed: () {},
-                child: Text(
-                  "Notifications",
-                  style: TextStyle(
-                    fontSize: 25,
-                    color: const Color(0xFF3A3A3A),
-                  ),
-                ),
-              ),
+
+            // ── Notifications button ──────────────────────────────
+            _goldButton(
+              label: 'Notifications',
+              onPressed: () => Navigator.pushNamed(context, '/notifications'),
             ),
-            SizedBox(
-              width: SizeConfig.horizontal! * 85,
-              height: SizeConfig.vertical! * 7,
-              child: ElevatedButton(
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: cardGold,
-                  elevation: 5,
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(10),
-                  ),
-                ),
-                onPressed: () {},
-                child: Text(
-                  "Language",
-                  style: TextStyle(fontSize: 25, color: Color(0xFF3A3A3A)),
-                ),
-              ),
+
+            // ── Language button ───────────────────────────────────
+            _goldButton(label: 'Language', onPressed: () {}),
+
+            // ── Logout button ─────────────────────────────────────
+            _goldButton(
+              label: 'Logout',
+              onPressed: () {
+                Auth().logout().then((_) {
+                  Navigator.pushNamedAndRemoveUntil(context, '/', (_) => false);
+                });
+              },
             ),
-            SizedBox(
-              width: SizeConfig.horizontal! * 85,
-              height: SizeConfig.vertical! * 7,
-              child: ElevatedButton(
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: cardGold,
-                  elevation: 5,
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(10),
-                  ),
-                ),
-                onPressed: () {
-                  Navigator.pushNamed(context, '/account');
-                },
-                child: Text(
-                  "Account Information",
-                  style: TextStyle(fontSize: 25, color: Color(0xFF3A3A3A)),
-                ),
-              ),
-            ),
-            SizedBox(
-              width: SizeConfig.horizontal! * 85,
-              height: SizeConfig.vertical! * 7,
-              child: ElevatedButton(
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: cardGold,
-                  elevation: 5,
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(10),
-                  ),
-                ),
-                onPressed: () {},
-                child: Text(
-                  "Logout",
-                  style: TextStyle(fontSize: 25, color: Color(0xFF3A3A3A)),
-                ),
-              ),
-            ),
+
+            // ── Help ──────────────────────────────────────────────
             TextButton(
               onPressed: () {},
-              child: Text(
-                "Help",
+              child: const Text(
+                'Help',
                 style: TextStyle(fontSize: 20, color: Colors.black),
               ),
             ),
+
+            // ── Delete Account ────────────────────────────────────
             TextButton(
-              onPressed: () {},
-              child: Text(
-                "Delete Account",
-                style: TextStyle(fontSize: 20, color: Colors.black),
+              onPressed: () => _confirmDeleteAccount(context),
+              child: const Text(
+                'Delete Account',
+                style: TextStyle(fontSize: 20, color: Colors.red),
               ),
             ),
+
+            const SizedBox(height: 8),
           ],
         ),
       ),
       drawer: Drawer(
         child: ListView(
           children: [
-            ListTile(title: Text('About Device'), onTap: () {}),
             ListTile(
-              title: Text('Settings'),
+              leading: const Icon(Icons.home),
+              title: const Text('Home'),
               onTap: () {
-                // Navigator.pushNamed(context, '/settings');
+                Navigator.pop(context);
+                Navigator.pushNamedAndRemoveUntil(
+                  context,
+                  '/home',
+                  (_) => false,
+                );
               },
             ),
             ListTile(
-              title: Text('Logout'),
+              leading: const Icon(Icons.logout),
+              title: const Text('Logout'),
               onTap: () {
                 Auth().logout().then((_) {
                   Navigator.pushNamedAndRemoveUntil(context, '/', (_) => false);
@@ -178,5 +152,56 @@ class _SettingscreenState extends State<Settingscreen> {
         ),
       ),
     );
+  }
+
+  Widget _goldButton({required String label, required VoidCallback onPressed}) {
+    return SizedBox(
+      width: SizeConfig.horizontal! * 85,
+      height: SizeConfig.vertical! * 7,
+      child: ElevatedButton(
+        style: ElevatedButton.styleFrom(
+          backgroundColor: const Color(0xFFF4BF5E),
+          elevation: 5,
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(10),
+          ),
+        ),
+        onPressed: onPressed,
+        child: Text(
+          label,
+          style: const TextStyle(fontSize: 25, color: Color(0xFF3A3A3A)),
+        ),
+      ),
+    );
+  }
+
+  Future<void> _confirmDeleteAccount(BuildContext ctx) async {
+    final confirmed = await showDialog<bool>(
+      context: ctx,
+      builder: (c) => AlertDialog(
+        title: const Text('Delete Account'),
+        content: const Text(
+          'Are you sure you want to permanently delete your account '
+          'and all associated data? This action cannot be undone.',
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(c, false),
+            child: const Text('Cancel'),
+          ),
+          TextButton(
+            onPressed: () => Navigator.pop(c, true),
+            child: const Text('Delete', style: TextStyle(color: Colors.red)),
+          ),
+        ],
+      ),
+    );
+    if (confirmed == true && mounted) {
+      await Data.deleteAllUserData();
+      await Auth().currentUser?.delete();
+      if (mounted) {
+        Navigator.pushNamedAndRemoveUntil(context, '/', (_) => false);
+      }
+    }
   }
 }

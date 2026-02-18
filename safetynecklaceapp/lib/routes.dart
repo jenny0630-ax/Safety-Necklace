@@ -5,6 +5,7 @@ import 'package:safetynecklaceapp/screens/homescreen.dart';
 import 'package:safetynecklaceapp/screens/Settingscreen.dart';
 import 'package:safetynecklaceapp/screens/profilescreen.dart';
 import 'package:safetynecklaceapp/screens/accountscreen.dart';
+import 'package:safetynecklaceapp/screens/notificationsscreen.dart';
 
 var routes = {
   '/': (context) => InitialScreen(),
@@ -14,4 +15,5 @@ var routes = {
   '/settings': (context) => Settingscreen(),
   '/profile': (context) => Profilescreen(),
   '/account': (context) => Accountscreen(),
+  '/notifications': (context) => NotificationSettingsScreen(),
 };
