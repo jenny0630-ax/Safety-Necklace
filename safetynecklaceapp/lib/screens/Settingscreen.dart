@@ -52,7 +52,7 @@ class _SettingscreenState extends State<Settingscreen> {
       body: Center(
         child: Column(
           children: [
-            const SizedBox(height: 8),
+            const SizedBox(height: 14),
             // ── Profile card ──────────────────────────────────────
             InkWell(
               onTap: () async {
@@ -61,7 +61,7 @@ class _SettingscreenState extends State<Settingscreen> {
               },
               child: SizedBox(
                 width: SizeConfig.horizontal! * 85,
-                height: SizeConfig.vertical! * 16,
+                height: SizeConfig.vertical! * 17,
                 child: Card(
                   color: cardGold,
                   elevation: 4,
@@ -85,7 +85,7 @@ class _SettingscreenState extends State<Settingscreen> {
                             crossAxisAlignment: CrossAxisAlignment.end,
                             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                             children: [
-                              Text(_name, style: const TextStyle(fontSize: 20)),
+                              Text(_name, style: const TextStyle(fontSize: 22)),
                               Text(_dob, style: const TextStyle(fontSize: 18)),
                               if (age != null)
                                 Text(
@@ -106,7 +106,7 @@ class _SettingscreenState extends State<Settingscreen> {
               ),
             ),
 
-            const SizedBox(height: 26),
+            const SizedBox(height: 24),
 
             // ── Notifications button ──────────────────────────────
             _goldButton(
@@ -114,12 +114,12 @@ class _SettingscreenState extends State<Settingscreen> {
               onPressed: () => Navigator.pushNamed(context, '/notifications'),
             ),
 
-            const SizedBox(height: 14),
+            const SizedBox(height: 12),
 
             // ── Language button ───────────────────────────────────
             _goldButton(label: 'Language', onPressed: () {}),
 
-            const SizedBox(height: 14),
+            const SizedBox(height: 12),
 
             // ── Logout button ─────────────────────────────────────
             _goldButton(
@@ -142,6 +142,7 @@ class _SettingscreenState extends State<Settingscreen> {
                 style: TextStyle(
                   fontSize: 34 / 1.6,
                   decoration: TextDecoration.underline,
+                  decorationThickness: 1.8,
                 ),
               ),
             ),

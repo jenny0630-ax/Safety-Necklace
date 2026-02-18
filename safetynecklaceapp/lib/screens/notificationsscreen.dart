@@ -51,14 +51,15 @@ class _NotificationSettingsScreenState
       body: _loading
           ? const Center(child: CircularProgressIndicator())
           : Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 30, vertical: 24),
+              padding: const EdgeInsets.fromLTRB(26, 28, 26, 24),
               child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   _toggleRow('Sound', _sound, (v) {
                     setState(() => _sound = v);
                     _save();
                   }),
-                  const SizedBox(height: 16),
+                  const SizedBox(height: 10),
                   _toggleRow('Vibration', _vibration, (v) {
                     setState(() => _vibration = v);
                     _save();
@@ -76,7 +77,7 @@ class _NotificationSettingsScreenState
           child: Text(
             title,
             style: const TextStyle(
-              fontSize: 34 / 1.6,
+              fontSize: 36 / 1.6,
               color: Color(0xFF3D3D3D),
             ),
           ),
@@ -85,6 +86,7 @@ class _NotificationSettingsScreenState
           value: value,
           activeColor: const Color(0xFF96D98E),
           activeTrackColor: const Color(0xFFA7E3A3),
+          materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
           inactiveThumbColor: Colors.white,
           inactiveTrackColor: const Color(0xFFA9ACB2),
           onChanged: onChanged,

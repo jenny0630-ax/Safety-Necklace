@@ -19,7 +19,7 @@ class HomeScreen extends StatefulWidget {
 class _HomeScreenState extends State<HomeScreen> {
   static const LatLng _defaultCenter = LatLng(33.6846, -117.7957);
   static const String _tileTemplate =
-      'https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png';
+      'https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png';
 
   List<NecklaceDevice> _devices = [];
   List<DeviceAlert> _alerts = [];
@@ -67,6 +67,7 @@ class _HomeScreenState extends State<HomeScreen> {
       body: Center(
         child: Column(
           children: [
+            const SizedBox(height: 6),
             // ── Map preview ────────────────────────────────────────
             GestureDetector(
               onTap: () {
@@ -82,7 +83,7 @@ class _HomeScreenState extends State<HomeScreen> {
               },
               child: SizedBox(
                 width: SizeConfig.horizontal! * 90,
-                height: SizeConfig.horizontal! * 48,
+                height: SizeConfig.horizontal! * 53,
                 child: Card(
                   elevation: 4,
                   shape: RoundedRectangleBorder(
@@ -150,7 +151,7 @@ class _HomeScreenState extends State<HomeScreen> {
                     borderRadius: BorderRadius.circular(32),
                   ),
                   child: Padding(
-                    padding: const EdgeInsets.all(16.0),
+                    padding: const EdgeInsets.fromLTRB(14, 16, 14, 16),
                     child: ListView(
                       children: [
                         // Device cards
@@ -162,13 +163,13 @@ class _HomeScreenState extends State<HomeScreen> {
                             .map((a) => _alertCard(a, cardGold)),
                         if (_devices.isEmpty && _alerts.isEmpty)
                           const Padding(
-                            padding: EdgeInsets.all(32),
+                            padding: EdgeInsets.only(top: 42),
                             child: Center(
                               child: Text(
                                 'No paired necklaces yet.\nTap + to pair one.',
                                 textAlign: TextAlign.center,
                                 style: TextStyle(
-                                  fontSize: 16,
+                                  fontSize: 20,
                                   color: Colors.black54,
                                 ),
                               ),
@@ -188,7 +189,7 @@ class _HomeScreenState extends State<HomeScreen> {
       floatingActionButton: FloatingActionButton(
         backgroundColor: cardGold,
         onPressed: () => _showPairDialog(context),
-        child: const Icon(Icons.add, color: Colors.black87),
+        child: const Icon(Icons.add, color: Colors.black87, size: 34),
       ),
 
       // ── Drawer ───────────────────────────────────────────────────
@@ -242,7 +243,7 @@ class _HomeScreenState extends State<HomeScreen> {
     return Padding(
       padding: const EdgeInsets.only(bottom: 8),
       child: SizedBox(
-        height: SizeConfig.vertical! * 8,
+        height: SizeConfig.vertical! * 7.2,
         child: InkWell(
           onTap: () {
             Navigator.push(
@@ -258,7 +259,7 @@ class _HomeScreenState extends State<HomeScreen> {
               borderRadius: BorderRadius.circular(16),
             ),
             child: Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 12),
+              padding: const EdgeInsets.symmetric(horizontal: 14),
               child: Row(
                 children: [
                   CircleAvatar(
@@ -270,14 +271,14 @@ class _HomeScreenState extends State<HomeScreen> {
                     child: Text(
                       d.name,
                       style: const TextStyle(
-                        fontSize: 16,
+                        fontSize: 17,
                         fontWeight: FontWeight.w500,
                       ),
                     ),
                   ),
                   Text(
                     '${d.battery.toStringAsFixed(0)}%',
-                    style: const TextStyle(fontSize: 14),
+                    style: const TextStyle(fontSize: 13),
                   ),
                   const SizedBox(width: 4),
                   Icon(

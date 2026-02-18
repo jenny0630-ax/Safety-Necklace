@@ -1,7 +1,6 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:safetynecklaceapp/services/data.dart';
-import 'package:safetynecklaceapp/size_config.dart';
 
 /// Device detail screen – shows battery, sensor functions, and status
 /// for a single paired necklace.
@@ -68,48 +67,49 @@ class _DeviceScreenState extends State<DeviceScreen> {
                   // ── Battery card ──────────────────────────────────
                   _sectionCard(
                     softcream,
-                    child: Row(
+                    child: Column(
                       children: [
-                        Icon(
-                          _batteryIcon(device.battery),
-                          size: 48,
-                          color: _batteryColor(device.battery),
-                        ),
-                        const SizedBox(width: 16),
-                        Expanded(
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              const Text(
-                                'Battery',
-                                style: TextStyle(
-                                  fontSize: 14,
-                                  color: Colors.black54,
-                                ),
+                        Row(
+                          children: [
+                            Container(
+                              width: 48,
+                              height: 90,
+                              padding: const EdgeInsets.all(4),
+                              decoration: BoxDecoration(
+                                color: const Color(0xFF656565),
+                                borderRadius: BorderRadius.circular(10),
                               ),
-                              Text(
-                                '${device.battery.toStringAsFixed(0)}%',
-                                style: const TextStyle(
-                                  fontSize: 32,
-                                  fontWeight: FontWeight.bold,
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
-                        // Battery bar
-                        SizedBox(
-                          width: SizeConfig.horizontal! * 30,
-                          child: ClipRRect(
-                            borderRadius: BorderRadius.circular(8),
-                            child: LinearProgressIndicator(
-                              value: device.battery / 100,
-                              minHeight: 14,
-                              backgroundColor: Colors.black12,
-                              valueColor: AlwaysStoppedAnimation(
-                                _batteryColor(device.battery),
+                              child: Column(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceEvenly,
+                                children: List.generate(4, (i) {
+                                  final threshold = (i + 1) * 25;
+                                  final active = device.battery >= threshold;
+                                  return Container(
+                                    height: 16,
+                                    decoration: BoxDecoration(
+                                      color: active
+                                          ? const Color(0xFF97E37A)
+                                          : const Color(0xFFB8BEC6),
+                                      borderRadius: BorderRadius.circular(7),
+                                    ),
+                                  );
+                                }),
                               ),
                             ),
+                            const Spacer(),
+                            Icon(
+                              _batteryIcon(device.battery),
+                              color: _batteryColor(device.battery),
+                            ),
+                          ],
+                        ),
+                        const SizedBox(height: 10),
+                        Text(
+                          '${device.battery.toStringAsFixed(0)}%',
+                          style: const TextStyle(
+                            fontSize: 38 / 1.6,
+                            fontWeight: FontWeight.w600,
                           ),
                         ),
                       ],

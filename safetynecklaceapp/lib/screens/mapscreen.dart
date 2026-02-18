@@ -18,7 +18,7 @@ class _MapScreenState extends State<MapScreen> {
   static const Color _cream = Color(0xFFFFEFD2);
   static const Color _cardGold = Color(0xFFF4BF5E);
   static const String _tileTemplate =
-      'https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png';
+      'https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png';
 
   final MapController _mapController = MapController();
   StreamSubscription? _sub;
@@ -59,10 +59,10 @@ class _MapScreenState extends State<MapScreen> {
       ),
       body: Stack(
         children: [
-          ClipRRect(
-            borderRadius: BorderRadius.circular(24),
-            child: Padding(
-              padding: const EdgeInsets.all(12.0),
+          Padding(
+            padding: const EdgeInsets.fromLTRB(12, 8, 12, 12),
+            child: ClipRRect(
+              borderRadius: BorderRadius.circular(28),
               child: FlutterMap(
                 mapController: _mapController,
                 options: MapOptions(initialCenter: center, initialZoom: 15.0),
@@ -89,8 +89,10 @@ class _MapScreenState extends State<MapScreen> {
                           point: LatLng(_device!.lat, _device!.lon),
                           child: Icon(
                             Icons.location_on,
-                            color: _device!.online ? Colors.red : Colors.grey,
-                            size: 36,
+                            color: _device!.online
+                                ? const Color(0xFFFF6B6B)
+                                : Colors.grey,
+                            size: 38,
                           ),
                         ),
                       ],
@@ -103,11 +105,12 @@ class _MapScreenState extends State<MapScreen> {
           // ── Info chip at bottom ───────────────────────────────────
           if (_device != null)
             Positioned(
-              bottom: 24,
+              bottom: 20,
               left: 16,
               right: 16,
               child: Card(
                 color: const Color(0xFFF9DDAA),
+                elevation: 4,
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(16),
                 ),

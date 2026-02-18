@@ -1,7 +1,6 @@
 import 'dart:io';
 
 import 'package:flutter/material.dart';
-import 'package:safetynecklaceapp/components/styledInputField.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:safetynecklaceapp/services/auth.dart';
 import 'package:safetynecklaceapp/services/data.dart';
@@ -17,10 +16,10 @@ class _ProfilescreenState extends State<Profilescreen> {
   XFile? _profileImage;
   bool _loading = true;
 
-  TextEditingController nameController = TextEditingController();
-  TextEditingController dobController = TextEditingController();
-  TextEditingController mobileController = TextEditingController();
-  TextEditingController emailController = TextEditingController();
+  final TextEditingController nameController = TextEditingController();
+  final TextEditingController dobController = TextEditingController();
+  final TextEditingController mobileController = TextEditingController();
+  final TextEditingController emailController = TextEditingController();
 
   @override
   void initState() {
@@ -73,96 +72,103 @@ class _ProfilescreenState extends State<Profilescreen> {
   Widget build(BuildContext context) {
     const cream = Color(0xFFFFEFD2);
     const cardGold = Color(0xFFF4BF5E);
+
     return Scaffold(
-      appBar: AppBar(backgroundColor: cream, title: const Text('Edit Profile')),
+      appBar: AppBar(backgroundColor: cream),
       backgroundColor: cream,
       body: _loading
           ? const Center(child: CircularProgressIndicator())
           : SafeArea(
-              child: Center(
-                child: Padding(
-                  padding: const EdgeInsets.fromLTRB(30.0, 0.0, 30.0, 30.0),
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      InkWell(
-                        onTap: () {
-                          ImagePicker()
-                              .pickImage(source: ImageSource.gallery)
-                              .then((pickedImage) {
-                                if (pickedImage != null) {
-                                  setState(() {
-                                    _profileImage = pickedImage;
-                                  });
-                                  Data.saveProfileImage(File(pickedImage.path));
-                                }
-                              });
-                        },
-                        child: Center(
-                          child: CircleAvatar(
-                            radius: 60,
-                            foregroundImage: _profileImage != null
-                                ? FileImage(File(_profileImage!.path))
-                                : null,
-                            child: _profileImage == null
-                                ? const Icon(Icons.camera_alt, size: 32)
-                                : null,
-                          ),
-                        ),
-                      ),
-                      Styledtextfield(
-                        controller: nameController,
-                        labelText: "Name",
-                      ),
-                      Styledtextfield(
-                        controller: dobController,
-                        labelText: "Date of Birth",
-                      ),
-                      Styledtextfield(
-                        controller: mobileController,
-                        labelText: "Mobile Number",
-                      ),
-                      Styledtextfield(
-                        controller: emailController,
-                        labelText: "Email",
-                      ),
-                      _profileSummaryCard(),
-                      Center(
-                        child: ElevatedButton(
-                          style: ElevatedButton.styleFrom(
-                            backgroundColor: cardGold,
-                            padding: const EdgeInsets.symmetric(
-                              horizontal: 40,
-                              vertical: 14,
-                            ),
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(8),
+              child: SingleChildScrollView(
+                child: Center(
+                  child: Padding(
+                    padding: const EdgeInsets.fromLTRB(30.0, 6.0, 30.0, 26.0),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        InkWell(
+                          onTap: () async {
+                            final pickedImage = await ImagePicker().pickImage(
+                              source: ImageSource.gallery,
+                            );
+                            if (pickedImage != null) {
+                              setState(() => _profileImage = pickedImage);
+                              Data.saveProfileImage(File(pickedImage.path));
+                            }
+                          },
+                          child: Center(
+                            child: CircleAvatar(
+                              radius: 58,
+                              backgroundColor: const Color(0xFF9E9E9E),
+                              foregroundImage: _profileImage != null
+                                  ? FileImage(File(_profileImage!.path))
+                                  : null,
+                              child: _profileImage == null
+                                  ? const Icon(Icons.camera_alt, size: 30)
+                                  : null,
                             ),
                           ),
-                          onPressed: canSaveProfileData()
-                              ? () {
-                                  Data.saveProfileData(
-                                    name: nameController.text,
-                                    dob: dobController.text,
-                                    mobile: mobileController.text,
-                                    email: emailController.text,
-                                  );
-                                  ScaffoldMessenger.of(context).showSnackBar(
-                                    const SnackBar(
-                                      content: Text('Profile saved!'),
-                                    ),
-                                  );
-                                  Navigator.pop(context);
-                                }
-                              : null,
-                          child: const Text(
-                            'Save',
-                            style: TextStyle(fontSize: 18),
+                        ),
+                        const SizedBox(height: 18),
+                        _profileInput(
+                          controller: nameController,
+                          labelText: 'Name',
+                        ),
+                        const SizedBox(height: 10),
+                        _profileInput(
+                          controller: dobController,
+                          labelText: 'Date of Birth',
+                        ),
+                        const SizedBox(height: 10),
+                        _profileInput(
+                          controller: mobileController,
+                          labelText: 'mobile number',
+                          keyboardType: TextInputType.phone,
+                        ),
+                        const SizedBox(height: 10),
+                        _profileInput(
+                          controller: emailController,
+                          labelText: 'Email',
+                        ),
+                        const SizedBox(height: 20),
+                        _profileSummaryCard(),
+                        const SizedBox(height: 18),
+                        Center(
+                          child: ElevatedButton(
+                            style: ElevatedButton.styleFrom(
+                              backgroundColor: cardGold,
+                              padding: const EdgeInsets.symmetric(
+                                horizontal: 42,
+                                vertical: 13,
+                              ),
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(10),
+                              ),
+                            ),
+                            onPressed: canSaveProfileData()
+                                ? () {
+                                    Data.saveProfileData(
+                                      name: nameController.text,
+                                      dob: dobController.text,
+                                      mobile: mobileController.text,
+                                      email: emailController.text,
+                                    );
+                                    ScaffoldMessenger.of(context).showSnackBar(
+                                      const SnackBar(
+                                        content: Text('Profile saved!'),
+                                      ),
+                                    );
+                                    Navigator.pop(context);
+                                  }
+                                : null,
+                            child: const Text(
+                              'Save',
+                              style: TextStyle(fontSize: 18),
+                            ),
                           ),
                         ),
-                      ),
-                    ],
+                      ],
+                    ),
                   ),
                 ),
               ),
@@ -176,7 +182,7 @@ class _ProfilescreenState extends State<Profilescreen> {
 
     return Container(
       width: double.infinity,
-      margin: const EdgeInsets.symmetric(horizontal: 22),
+      margin: const EdgeInsets.symmetric(horizontal: 4),
       decoration: BoxDecoration(
         color: cardGold,
         borderRadius: BorderRadius.circular(10),
@@ -188,20 +194,57 @@ class _ProfilescreenState extends State<Profilescreen> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.end,
         children: [
-          Text(nameController.text.isEmpty ? 'Jane Doe' : nameController.text),
+          Text(
+            nameController.text.isEmpty ? 'Jane Doe' : nameController.text,
+            style: const TextStyle(fontSize: 30 / 1.6),
+          ),
           const SizedBox(height: 4),
           Text(
             dobController.text.isEmpty ? 'January 1, 1999' : dobController.text,
+            style: const TextStyle(fontSize: 30 / 1.8),
           ),
           const SizedBox(height: 4),
-          Text(age == null ? 'Age: 32' : 'Age: $age'),
+          Text(
+            age == null ? 'Age: 32' : 'Age: $age',
+            style: const TextStyle(fontSize: 30 / 1.8),
+          ),
           const SizedBox(height: 4),
           Text(
             mobileController.text.isEmpty
                 ? '123-456-7890'
                 : mobileController.text,
+            style: const TextStyle(fontSize: 30 / 1.8),
           ),
         ],
+      ),
+    );
+  }
+
+  Widget _profileInput({
+    required TextEditingController controller,
+    required String labelText,
+    TextInputType keyboardType = TextInputType.text,
+  }) {
+    return Container(
+      decoration: BoxDecoration(
+        color: const Color(0xFFF9DDAA),
+        borderRadius: BorderRadius.circular(8),
+        boxShadow: const [
+          BoxShadow(color: Colors.black26, blurRadius: 3, offset: Offset(0, 2)),
+        ],
+      ),
+      padding: const EdgeInsets.symmetric(horizontal: 10),
+      child: TextField(
+        controller: controller,
+        keyboardType: keyboardType,
+        decoration: InputDecoration(
+          border: InputBorder.none,
+          labelText: labelText,
+          labelStyle: const TextStyle(
+            color: Color(0xCCBDAA7A),
+            fontSize: 36 / 1.8,
+          ),
+        ),
       ),
     );
   }
