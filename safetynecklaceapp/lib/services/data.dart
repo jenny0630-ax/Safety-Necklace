@@ -28,7 +28,7 @@ class NecklaceDevice {
 
   factory NecklaceDevice.fromMap(String id, Map<dynamic, dynamic> map) {
     final loc = map['location'] as Map? ?? {};
-    final int ts = (loc['ts'] as int?) ?? 0;
+    final int ts = (loc['ts'] as num?)?.toInt() ?? 0;
     // Consider "online" if last update was within 2 minutes
     final bool isOnline =
         DateTime.now().millisecondsSinceEpoch ~/ 1000 - ts < 120;
@@ -76,7 +76,7 @@ class DeviceAlert {
       type: (map['type'] as String?) ?? 'unknown',
       lat: (map['lat'] as num?)?.toDouble() ?? 0.0,
       lon: (map['lon'] as num?)?.toDouble() ?? 0.0,
-      timestamp: (map['ts'] as int?) ?? 0,
+      timestamp: (map['ts'] as num?)?.toInt() ?? 0,
       acknowledged: (map['ack'] as bool?) ?? false,
     );
   }

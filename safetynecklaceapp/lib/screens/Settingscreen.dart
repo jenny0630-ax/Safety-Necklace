@@ -1,4 +1,3 @@
-import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:safetynecklaceapp/services/auth.dart';
 import 'package:safetynecklaceapp/services/data.dart';
@@ -41,6 +40,7 @@ class _SettingscreenState extends State<Settingscreen> {
 
   @override
   Widget build(BuildContext context) {
+    SizeConfig().init(context);
     const cream = Color(0xFFFFEFD2);
     const cardGold = Color(0xFFF4BF5E);
 
@@ -117,17 +117,26 @@ class _SettingscreenState extends State<Settingscreen> {
             const SizedBox(height: 12),
 
             // ── Language button ───────────────────────────────────
-            _goldButton(label: 'Language', onPressed: () {}),
+            _goldButton(
+              label: 'Language',
+              onPressed: () {
+                ScaffoldMessenger.of(context).showSnackBar(
+                  const SnackBar(
+                    content: Text('English-only support in the current MVP.'),
+                  ),
+                );
+              },
+            ),
 
             const SizedBox(height: 12),
 
             // ── Logout button ─────────────────────────────────────
             _goldButton(
               label: 'Logout',
-              onPressed: () {
-                Auth().logout().then((_) {
-                  Navigator.pushNamedAndRemoveUntil(context, '/', (_) => false);
-                });
+              onPressed: () async {
+                await Auth().logout();
+                if (!context.mounted) return;
+                Navigator.pushNamedAndRemoveUntil(context, '/', (_) => false);
               },
             ),
 
@@ -135,7 +144,23 @@ class _SettingscreenState extends State<Settingscreen> {
 
             // ── Help ──────────────────────────────────────────────
             TextButton(
-              onPressed: () {},
+              onPressed: () {
+                showDialog<void>(
+                  context: context,
+                  builder: (c) => AlertDialog(
+                    title: const Text('Help'),
+                    content: const Text(
+                      'If you need help with account access or device pairing, contact the SafeNeck team and include your device ID.',
+                    ),
+                    actions: [
+                      TextButton(
+                        onPressed: () => Navigator.pop(c),
+                        child: const Text('Close'),
+                      ),
+                    ],
+                  ),
+                );
+              },
               style: TextButton.styleFrom(foregroundColor: Colors.black),
               child: const Text(
                 'Help',
@@ -179,10 +204,10 @@ class _SettingscreenState extends State<Settingscreen> {
             ListTile(
               leading: const Icon(Icons.logout),
               title: const Text('Logout'),
-              onTap: () {
-                Auth().logout().then((_) {
-                  Navigator.pushNamedAndRemoveUntil(context, '/', (_) => false);
-                });
+              onTap: () async {
+                await Auth().logout();
+                if (!context.mounted) return;
+                Navigator.pushNamedAndRemoveUntil(context, '/', (_) => false);
               },
             ),
           ],
@@ -265,10 +290,21 @@ class _SettingscreenState extends State<Settingscreen> {
       ),
     );
     if (confirmed == true && mounted) {
-      await Data.deleteAllUserData();
-      await Auth().currentUser?.delete();
-      if (mounted) {
-        Navigator.pushNamedAndRemoveUntil(context, '/', (_) => false);
+      try {
+        await Data.deleteAllUserData();
+        await Auth().currentUser?.delete();
+        if (mounted) {
+          Navigator.pushNamedAndRemoveUntil(context, '/', (_) => false);
+        }
+      } catch (_) {
+        if (!mounted) return;
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            content: Text(
+              'Account deletion failed. Please sign in again and retry.',
+            ),
+          ),
+        );
       }
     }
   }

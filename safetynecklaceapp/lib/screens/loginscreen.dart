@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:safetynecklaceapp/services/auth.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:safetynecklaceapp/services/auth.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
@@ -10,130 +10,187 @@ class LoginScreen extends StatefulWidget {
 }
 
 class _LoginScreenState extends State<LoginScreen> {
-  TextEditingController emailController = TextEditingController();
-  TextEditingController passwordController = TextEditingController();
+  final TextEditingController emailController = TextEditingController();
+  final TextEditingController passwordController = TextEditingController();
+  bool _isLoading = false;
+
+  @override
+  void dispose() {
+    emailController.dispose();
+    passwordController.dispose();
+    super.dispose();
+  }
+
+  void _showMessage(String message) {
+    if (!mounted) return;
+    ScaffoldMessenger.of(
+      context,
+    ).showSnackBar(SnackBar(content: Text(message)));
+  }
+
+  Future<void> _login() async {
+    FocusScope.of(context).unfocus();
+
+    final email = emailController.text.trim();
+    final password = passwordController.text.trim();
+
+    if (email.isEmpty || password.isEmpty) {
+      _showMessage('Enter your email and password.');
+      return;
+    }
+
+    setState(() => _isLoading = true);
+    final user = await Auth().login(email, password);
+    if (!mounted) return;
+
+    setState(() => _isLoading = false);
+
+    if (user != null) {
+      Navigator.pushNamedAndRemoveUntil(context, '/', (_) => false);
+      return;
+    }
+
+    _showMessage('Login failed. Please check your credentials and try again.');
+  }
+
+  Future<void> _forgotPassword() async {
+    final email = emailController.text.trim();
+    if (email.isEmpty) {
+      _showMessage('Enter your email first to receive a reset link.');
+      return;
+    }
+
+    final error = await Auth().sendPasswordResetEmail(email);
+    if (!mounted) return;
+
+    if (error == null) {
+      _showMessage('Password reset email sent.');
+    } else {
+      _showMessage(error);
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
+    const background = Color(0xFFFFEFD2);
+
     return Scaffold(
-      backgroundColor: Color(0xFFFFEFD2),
-      body: Column(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: [
-          Container(),
-          Column(
-            children: [
-              Text(
-                "SafeNeck",
-                style: GoogleFonts.judson(
-                  fontSize: 45,
-                  fontWeight: FontWeight.bold,
+      backgroundColor: background,
+      body: SafeArea(
+        child: Center(
+          child: SingleChildScrollView(
+            padding: const EdgeInsets.symmetric(vertical: 16),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Text(
+                  'SafeNeck',
+                  style: GoogleFonts.judson(
+                    fontSize: 45,
+                    fontWeight: FontWeight.bold,
+                  ),
                 ),
-              ),
-              Padding(
-                padding: const EdgeInsets.all(22.0),
-                child: Container(
-                  decoration: ShapeDecoration(
-                    gradient: LinearGradient(
-                      colors: [Color(0xFFC8B283), Color(0xFFF9DDAA)],
-                      begin: Alignment.topCenter,
-                      end: Alignment.bottomCenter,
-                      stops: [0.0, 0.2],
-                      tileMode: TileMode.clamp,
+                _styledField(
+                  controller: emailController,
+                  labelText: 'Email',
+                  keyboardType: TextInputType.emailAddress,
+                  textInputAction: TextInputAction.next,
+                  autocorrect: false,
+                  enableSuggestions: false,
+                ),
+                _styledField(
+                  controller: passwordController,
+                  labelText: 'Password',
+                  obscureText: true,
+                  textInputAction: TextInputAction.done,
+                  onSubmitted: (_) {
+                    if (!_isLoading) _login();
+                  },
+                  autocorrect: false,
+                  enableSuggestions: false,
+                ),
+                TextButton(
+                  onPressed: _isLoading ? null : _forgotPassword,
+                  child: const Text('Forgot Password?'),
+                ),
+                const SizedBox(height: 4),
+                ElevatedButton(
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: const Color(0xFFF4BF5E),
+                    textStyle: const TextStyle(
+                      fontSize: 20,
+                      color: Color(0xFF3A3A3A),
                     ),
                     shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.all(Radius.circular(7.0)),
+                      borderRadius: BorderRadius.circular(6.0),
                     ),
                   ),
-                  child: TextField(
-                    controller: emailController,
-                    keyboardType: TextInputType.emailAddress,
-                    decoration: InputDecoration(
-                      labelText: 'Email',
-                      labelStyle: TextStyle(color: Color(0xFFC8B283)),
-                      // fillColor: Color(0xFFF9DDAA),
-                      // filled: true,
-                      border: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(10.0),
-                        borderSide: BorderSide.none,
-                      ),
-                    ),
-                  ),
+                  onPressed: _isLoading ? null : _login,
+                  child: _isLoading
+                      ? const SizedBox(
+                          height: 20,
+                          width: 20,
+                          child: CircularProgressIndicator(strokeWidth: 2),
+                        )
+                      : const Text('Login'),
                 ),
-              ),
-              Padding(
-                padding: const EdgeInsets.all(22.0),
-                child: Container(
-                  decoration: ShapeDecoration(
-                    gradient: LinearGradient(
-                      colors: [Color(0xFFC8B283), Color(0xFFF9DDAA)],
-                      begin: Alignment.topCenter,
-                      end: Alignment.bottomCenter,
-                      stops: [0.0, 0.2],
-                      tileMode: TileMode.clamp,
-                    ),
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.all(Radius.circular(7.0)),
-                    ),
-                  ),
-                  child: TextField(
-                    controller: passwordController,
-                    obscureText: true,
-                    decoration: InputDecoration(
-                      labelText: 'Password',
-                      labelStyle: TextStyle(color: Color(0xFFC8B283)),
-                      // fillColor: Color(0xFFF9DDAA),
-                      // filled: true,
-                      border: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(10.0),
-                        borderSide: BorderSide.none,
-                      ),
-                    ),
-                  ),
+                const SizedBox(height: 10),
+                TextButton(
+                  onPressed: _isLoading
+                      ? null
+                      : () => Navigator.pushNamed(context, '/signup'),
+                  child: const Text('New Account? Sign Up.'),
                 ),
-              ),
-              TextButton(child: Text("Forgot Password?"), onPressed: () {}),
-              ElevatedButton(
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: Color(0xFFF4BF5E),
-                  textStyle: TextStyle(fontSize: 20, color: Color(0xFF3A3A3A)),
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(6.0),
-                  ),
-                ),
-                onPressed: () {
-                  // Handle login logic here
-                  String email = emailController.text.trim();
-                  String password = passwordController.text.trim();
-                  Auth().login(email, password).then((user) {
-                    if (user != null) {
-                      Navigator.pushNamedAndRemoveUntil(
-                        context,
-                        '/',
-                        (_) => false,
-                      );
-                    } else {
-                      // Show error message
-                      ScaffoldMessenger.of(context).showSnackBar(
-                        SnackBar(
-                          content: Text('Login failed. Please try again.'),
-                        ),
-                      );
-                    }
-                  });
-                },
-                child: Text('Login'),
-              ),
-            ],
+              ],
+            ),
           ),
-          TextButton(
-            onPressed: () {
-              // Navigate to registration screen
-              Navigator.pushNamed(context, "/signup");
-            },
-            child: Text('New Account? Sign Up.'),
+        ),
+      ),
+    );
+  }
+
+  Widget _styledField({
+    required TextEditingController controller,
+    required String labelText,
+    TextInputType keyboardType = TextInputType.text,
+    TextInputAction? textInputAction,
+    bool obscureText = false,
+    bool autocorrect = true,
+    bool enableSuggestions = true,
+    ValueChanged<String>? onSubmitted,
+  }) {
+    return Padding(
+      padding: const EdgeInsets.all(22.0),
+      child: Container(
+        decoration: ShapeDecoration(
+          gradient: const LinearGradient(
+            colors: [Color(0xFFC8B283), Color(0xFFF9DDAA)],
+            begin: Alignment.topCenter,
+            end: Alignment.bottomCenter,
+            stops: [0.0, 0.2],
+            tileMode: TileMode.clamp,
           ),
-        ],
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(7.0),
+          ),
+        ),
+        child: TextField(
+          controller: controller,
+          keyboardType: keyboardType,
+          textInputAction: textInputAction,
+          obscureText: obscureText,
+          autocorrect: autocorrect,
+          enableSuggestions: enableSuggestions,
+          onSubmitted: onSubmitted,
+          decoration: InputDecoration(
+            labelText: labelText,
+            labelStyle: const TextStyle(color: Color(0xFFC8B283)),
+            border: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(10.0),
+              borderSide: BorderSide.none,
+            ),
+          ),
+        ),
       ),
     );
   }

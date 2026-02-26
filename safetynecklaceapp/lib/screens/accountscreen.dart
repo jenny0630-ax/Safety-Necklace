@@ -10,9 +10,9 @@ class Accountscreen extends StatefulWidget {
 }
 
 class _AccountscreenState extends State<Accountscreen> {
-  TextEditingController emailController = TextEditingController();
-  TextEditingController oldPasswordController = TextEditingController();
-  TextEditingController newPasswordController = TextEditingController();
+  final TextEditingController emailController = TextEditingController();
+  final TextEditingController oldPasswordController = TextEditingController();
+  final TextEditingController newPasswordController = TextEditingController();
 
   bool isOldValid = false;
 
@@ -20,14 +20,20 @@ class _AccountscreenState extends State<Accountscreen> {
   void initState() {
     super.initState();
     emailController.text = Auth().currentUser?.email ?? '';
-    print('User email: ${emailController.text}');
+  }
+
+  @override
+  void dispose() {
+    emailController.dispose();
+    oldPasswordController.dispose();
+    newPasswordController.dispose();
+    super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
+    SizeConfig().init(context);
     const cream = Color(0xFFFFEFD2);
-    const softcream = Color(0xFFF9DDAA);
-    const cardGold = Color(0xFFF4BF5E);
     return Scaffold(
       appBar: AppBar(backgroundColor: cream),
       backgroundColor: cream,
@@ -49,7 +55,18 @@ class _AccountscreenState extends State<Accountscreen> {
                 ),
                 Positioned(
                   right: 5,
-                  child: ElevatedButton(onPressed: () {}, child: Text('Save')),
+                  child: ElevatedButton(
+                    onPressed: () {
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        const SnackBar(
+                          content: Text(
+                            'Email changes are disabled in this MVP. Use password reset if needed.',
+                          ),
+                        ),
+                      );
+                    },
+                    child: const Text('Save'),
+                  ),
                 ),
               ],
             ),
@@ -60,6 +77,7 @@ class _AccountscreenState extends State<Accountscreen> {
                     width: SizeConfig.horizontal! * 85,
                     child: TextField(
                       controller: oldPasswordController,
+                      obscureText: true,
                       decoration: InputDecoration(
                         border: OutlineInputBorder(),
                         labelText: 'Old Password',
@@ -69,16 +87,33 @@ class _AccountscreenState extends State<Accountscreen> {
                   Positioned(
                     right: 5,
                     child: ElevatedButton(
-                      onPressed: () {
-                        Auth().reauthenticate(oldPasswordController.text).then((
-                          value,
-                        ) {
-                          setState(() {
-                            isOldValid = value;
-                          });
+                      onPressed: () async {
+                        if (oldPasswordController.text.trim().isEmpty) {
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            const SnackBar(
+                              content: Text('Enter your current password.'),
+                            ),
+                          );
+                          return;
+                        }
+                        final value = await Auth().reauthenticate(
+                          oldPasswordController.text,
+                        );
+                        if (!context.mounted) return;
+                        setState(() {
+                          isOldValid = value;
                         });
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          SnackBar(
+                            content: Text(
+                              value
+                                  ? 'Password verified. Enter a new password.'
+                                  : 'Could not verify password.',
+                            ),
+                          ),
+                        );
                       },
-                      child: Text('Save'),
+                      child: const Text('Save'),
                     ),
                   ),
                 ],
@@ -90,6 +125,7 @@ class _AccountscreenState extends State<Accountscreen> {
                     width: SizeConfig.horizontal! * 85,
                     child: TextField(
                       controller: newPasswordController,
+                      obscureText: true,
                       decoration: InputDecoration(
                         border: OutlineInputBorder(),
                         labelText: 'New Password',
@@ -99,18 +135,36 @@ class _AccountscreenState extends State<Accountscreen> {
                   Positioned(
                     right: 5,
                     child: ElevatedButton(
-                      onPressed: () {
-                        Auth().changePassword(newPasswordController.text).then((
-                          value,
-                        ) {
-                          setState(() {
-                            isOldValid = false;
-                            oldPasswordController.clear();
-                            newPasswordController.clear();
-                          });
+                      onPressed: () async {
+                        final newPassword = newPasswordController.text.trim();
+                        if (newPassword.length < 6) {
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            const SnackBar(
+                              content: Text(
+                                'New password must be at least 6 characters.',
+                              ),
+                            ),
+                          );
+                          return;
+                        }
+                        final error = await Auth().changePassword(newPassword);
+                        if (!context.mounted) return;
+                        setState(() {
+                          isOldValid = false;
+                          oldPasswordController.clear();
+                          newPasswordController.clear();
                         });
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          SnackBar(
+                            content: Text(
+                              error == null
+                                  ? 'Password updated.'
+                                  : 'Failed to update password: $error',
+                            ),
+                          ),
+                        );
                       },
-                      child: Text('Save'),
+                      child: const Text('Save'),
                     ),
                   ),
                 ],

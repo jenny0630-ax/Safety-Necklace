@@ -19,6 +19,7 @@ class _MapScreenState extends State<MapScreen> {
   static const Color _cardGold = Color(0xFFF4BF5E);
   static const String _tileTemplate =
       'https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png';
+  static const String _tileUserAgent = 'com.example.safetynecklaceapp';
 
   final MapController _mapController = MapController();
   StreamSubscription? _sub;
@@ -70,8 +71,7 @@ class _MapScreenState extends State<MapScreen> {
                   TileLayer(
                     urlTemplate: _tileTemplate,
                     subdomains: const ['a', 'b', 'c', 'd'],
-                    userAgentPackageName:
-                        'com.safetynecklace.safetynecklaceapp',
+                    userAgentPackageName: _tileUserAgent,
                     maxZoom: 20,
                   ),
                   RichAttributionWidget(

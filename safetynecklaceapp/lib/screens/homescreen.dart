@@ -20,6 +20,7 @@ class _HomeScreenState extends State<HomeScreen> {
   static const LatLng _defaultCenter = LatLng(33.6846, -117.7957);
   static const String _tileTemplate =
       'https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png';
+  static const String _tileUserAgent = 'com.example.safetynecklaceapp';
 
   List<NecklaceDevice> _devices = [];
   List<DeviceAlert> _alerts = [];
@@ -53,6 +54,7 @@ class _HomeScreenState extends State<HomeScreen> {
 
   @override
   Widget build(BuildContext context) {
+    SizeConfig().init(context);
     const cream = Color(0xFFFFEFD2);
     const softcream = Color(0xFFF9DDAA);
     const cardGold = Color(0xFFF4BF5E);
@@ -101,8 +103,7 @@ class _HomeScreenState extends State<HomeScreen> {
                           TileLayer(
                             urlTemplate: _tileTemplate,
                             subdomains: const ['a', 'b', 'c', 'd'],
-                            userAgentPackageName:
-                                'com.safetynecklace.safetynecklaceapp',
+                            userAgentPackageName: _tileUserAgent,
                             maxZoom: 20,
                           ),
                           RichAttributionWidget(
@@ -226,10 +227,10 @@ class _HomeScreenState extends State<HomeScreen> {
             ListTile(
               leading: const Icon(Icons.logout),
               title: const Text('Logout'),
-              onTap: () {
-                Auth().logout().then((_) {
-                  Navigator.pushNamedAndRemoveUntil(context, '/', (_) => false);
-                });
+              onTap: () async {
+                await Auth().logout();
+                if (!context.mounted) return;
+                Navigator.pushNamedAndRemoveUntil(context, '/', (_) => false);
               },
             ),
           ],

@@ -1,16 +1,25 @@
-# safetynecklaceapp
+# SafeNeck Flutter App
 
-A new Flutter project.
+Flutter mobile companion app for the SafeNeck safety necklace MVP.
 
-## Getting Started
+## What It Does
 
-This project is a starting point for a Flutter application.
+- Authenticates users with Firebase Auth (email/password)
+- Streams paired device location and alerts from Firebase Realtime Database
+- Shows a home dashboard, map view, device details, profile, and settings
 
-A few resources to get you started if this is your first Flutter project:
+## Run
 
-- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
+```bash
+flutter pub get
+flutter run
+```
 
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+## Important
+
+- This project is currently configured with native Firebase files for the existing package/bundle ID.
+- If you rename the app ID for store submission, regenerate:
+  - `android/app/google-services.json`
+  - `ios/Runner/GoogleService-Info.plist`
+
+See the repo root README for hardware, firmware, webhook, and release checklist details.

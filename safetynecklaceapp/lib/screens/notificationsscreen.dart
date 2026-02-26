@@ -84,7 +84,7 @@ class _NotificationSettingsScreenState
         ),
         Switch(
           value: value,
-          activeColor: const Color(0xFF96D98E),
+          activeThumbColor: const Color(0xFF96D98E),
           activeTrackColor: const Color(0xFFA7E3A3),
           materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
           inactiveThumbColor: Colors.white,

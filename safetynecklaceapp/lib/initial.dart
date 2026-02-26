@@ -1,6 +1,5 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:safetynecklaceapp/services/auth.dart';
 import 'package:safetynecklaceapp/screens/homescreen.dart';
 import 'package:safetynecklaceapp/screens/loginscreen.dart';
 
@@ -14,12 +13,21 @@ class InitialScreen extends StatefulWidget {
 class _InitialScreenState extends State<InitialScreen> {
   @override
   Widget build(BuildContext context) {
-    User? user = Auth().currentUser;
+    return StreamBuilder<User?>(
+      stream: FirebaseAuth.instance.authStateChanges(),
+      builder: (context, snapshot) {
+        if (snapshot.connectionState == ConnectionState.waiting) {
+          return const Scaffold(
+            body: Center(child: CircularProgressIndicator()),
+          );
+        }
 
-    if (user != null) {
-      return HomeScreen();
-    } else {
-      return LoginScreen();
-    }
+        if (snapshot.data != null) {
+          return const HomeScreen();
+        }
+
+        return const LoginScreen();
+      },
+    );
   }
 }

@@ -1,11 +1,11 @@
 {
-    "name": "safetynecklaceapp",
-    "short_name": "safetynecklaceapp",
+    "name": "SafeNeck",
+    "short_name": "SafeNeck",
     "start_url": ".",
     "display": "standalone",
     "background_color": "#0175C2",
     "theme_color": "#0175C2",
-    "description": "A new Flutter project.",
+    "description": "SafeNeck MVP companion app for safety necklace monitoring and fall alerts.",
     "orientation": "portrait-primary",
     "prefer_related_applications": false,
     "icons": [
