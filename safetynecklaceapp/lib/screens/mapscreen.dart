@@ -18,7 +18,7 @@ class _MapScreenState extends State<MapScreen> {
   static const Color _cream = Color(0xFFFFEFD2);
   static const Color _cardGold = Color(0xFFF4BF5E);
   static const String _tileTemplate =
-      'https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png';
+      'https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png';
 
   final MapController _mapController = MapController();
   StreamSubscription? _sub;

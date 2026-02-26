@@ -19,7 +19,7 @@ class HomeScreen extends StatefulWidget {
 class _HomeScreenState extends State<HomeScreen> {
   static const LatLng _defaultCenter = LatLng(33.6846, -117.7957);
   static const String _tileTemplate =
-      'https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png';
+      'https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png';
 
   List<NecklaceDevice> _devices = [];
   List<DeviceAlert> _alerts = [];
