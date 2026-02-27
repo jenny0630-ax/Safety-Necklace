@@ -24,6 +24,25 @@
           "other_platform_oauth_client": []
         }
       }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:874421575726:android:ed101baf85d54d5e457fbf",
+        "android_client_info": {
+          "package_name": "com.jenny.safetynecklaceapp"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyB8B1p5oiOXCxBn9JX9gvYDtmnXiyeCJDs"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
     }
   ],
   "configuration_version": "1"

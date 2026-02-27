@@ -1,4 +1,4 @@
-package com.example.safetynecklaceapp
+package com.jenny.safetynecklaceapp
 
 import io.flutter.embedding.android.FlutterActivity
 

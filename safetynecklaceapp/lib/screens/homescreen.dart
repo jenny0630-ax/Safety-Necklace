@@ -20,7 +20,7 @@ class _HomeScreenState extends State<HomeScreen> {
   static const LatLng _defaultCenter = LatLng(33.6846, -117.7957);
   static const String _tileTemplate =
       'https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png';
-  static const String _tileUserAgent = 'com.example.safetynecklaceapp';
+  static const String _tileUserAgent = 'com.jenny.safetynecklaceapp';
 
   List<NecklaceDevice> _devices = [];
   List<DeviceAlert> _alerts = [];
